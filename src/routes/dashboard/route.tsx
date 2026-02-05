@@ -6,7 +6,11 @@ import { DashboardSidebar } from "./-components/sidebar";
 export const Route = createFileRoute("/dashboard")({
 	component: RouteComponent,
 	beforeLoad: async ({ context }) => {
-		if (!context.session) throw redirect({ to: "/auth/login", replace: true });
+		// Allow guest mode access
+		const isGuestMode = typeof window !== "undefined" && localStorage.getItem("guestMode") === "true";
+		if (!context.session && !isGuestMode) {
+			throw redirect({ to: "/auth/login", replace: true });
+		}
 		return { session: context.session };
 	},
 	loader: async () => {

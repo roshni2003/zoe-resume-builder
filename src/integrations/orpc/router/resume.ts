@@ -2,11 +2,12 @@ import z from "zod";
 import { resumeDataSchema } from "@/schema/resume/data";
 import { sampleResumeData } from "@/schema/resume/sample";
 import { generateRandomName, slugify } from "@/utils/string";
-import { protectedProcedure, publicProcedure, serverOnlyProcedure } from "../context";
+import { publicProcedure, serverOnlyProcedure } from "../context";
+import { ensureGuestUserExists, GUEST_USER_ID } from "../helpers/guest-user";
 import { resumeService } from "../services/resume";
 
 const tagsRouter = {
-	list: protectedProcedure
+	list: publicProcedure
 		.route({
 			method: "GET",
 			path: "/resume/tags/list",
@@ -16,12 +17,13 @@ const tagsRouter = {
 		})
 		.output(z.array(z.string()))
 		.handler(async ({ context }) => {
-			return await resumeService.tags.list({ userId: context.user.id });
+			const userId = context.user?.id ?? GUEST_USER_ID;
+			return await resumeService.tags.list({ userId });
 		}),
 };
 
 const statisticsRouter = {
-	getById: protectedProcedure
+	getById: publicProcedure
 		.route({
 			method: "GET",
 			path: "/resume/statistics/{id}",
@@ -40,7 +42,8 @@ const statisticsRouter = {
 			}),
 		)
 		.handler(async ({ context, input }) => {
-			return await resumeService.statistics.getById({ id: input.id, userId: context.user.id });
+			const userId = context.user?.id ?? GUEST_USER_ID;
+			return await resumeService.statistics.getById({ id: input.id, userId });
 		}),
 
 	increment: publicProcedure
@@ -55,7 +58,7 @@ export const resumeRouter = {
 	tags: tagsRouter,
 	statistics: statisticsRouter,
 
-	list: protectedProcedure
+	list: publicProcedure
 		.route({
 			method: "GET",
 			path: "/resume/list",
@@ -87,14 +90,15 @@ export const resumeRouter = {
 			),
 		)
 		.handler(async ({ input, context }) => {
+			const userId = context.user?.id ?? GUEST_USER_ID;
 			return await resumeService.list({
-				userId: context.user.id,
+				userId,
 				tags: input.tags,
 				sort: input.sort,
 			});
 		}),
 
-	getById: protectedProcedure
+	getById: publicProcedure
 		.route({
 			method: "GET",
 			path: "/resume/{id}",
@@ -116,7 +120,8 @@ export const resumeRouter = {
 			}),
 		)
 		.handler(async ({ context, input }) => {
-			return await resumeService.getById({ id: input.id, userId: context.user.id });
+			const userId = context.user?.id ?? GUEST_USER_ID;
+			return await resumeService.getById({ id: input.id, userId });
 		}),
 
 	getByIdForPrinter: serverOnlyProcedure
@@ -150,7 +155,7 @@ export const resumeRouter = {
 			return await resumeService.getBySlug({ ...input, currentUserId: context.user?.id });
 		}),
 
-	create: protectedProcedure
+	create: publicProcedure
 		.route({
 			method: "POST",
 			path: "/resume/create",
@@ -174,17 +179,35 @@ export const resumeRouter = {
 			},
 		})
 		.handler(async ({ context, input }) => {
-			return await resumeService.create({
-				name: input.name,
-				slug: input.slug,
-				tags: input.tags,
-				locale: context.locale,
-				userId: context.user.id,
-				data: input.withSampleData ? sampleResumeData : undefined,
-			});
+			try {
+				const userId = context.user?.id ?? GUEST_USER_ID;
+				console.log("Creating resume for user:", userId);
+
+				// Ensure guest user exists before creating resume
+				if (userId === GUEST_USER_ID) {
+					console.log("Guest mode detected, ensuring guest user exists...");
+					await ensureGuestUserExists();
+					console.log("Guest user ensured");
+				}
+
+				const resumeId = await resumeService.create({
+					name: input.name,
+					slug: input.slug,
+					tags: input.tags,
+					locale: context.locale,
+					userId,
+					data: input.withSampleData ? sampleResumeData : undefined,
+				});
+
+				console.log("Resume created successfully:", resumeId);
+				return resumeId;
+			} catch (error) {
+				console.error("Error creating resume:", error);
+				throw error;
+			}
 		}),
 
-	import: protectedProcedure
+	import: publicProcedure
 		.route({
 			method: "POST",
 			path: "/resume/import",
@@ -203,6 +226,11 @@ export const resumeRouter = {
 		.handler(async ({ context, input }) => {
 			const name = generateRandomName();
 			const slug = slugify(name);
+			const userId = context.user?.id ?? GUEST_USER_ID;
+			// Ensure guest user exists before importing resume
+			if (userId === GUEST_USER_ID) {
+				await ensureGuestUserExists();
+			}
 
 			return await resumeService.create({
 				name,
@@ -210,11 +238,11 @@ export const resumeRouter = {
 				tags: [],
 				data: input.data,
 				locale: context.locale,
-				userId: context.user.id,
+				userId,
 			});
 		}),
 
-	update: protectedProcedure
+	update: publicProcedure
 		.route({
 			method: "PUT",
 			path: "/resume/{id}",
@@ -240,9 +268,10 @@ export const resumeRouter = {
 			},
 		})
 		.handler(async ({ context, input }) => {
+			const userId = context.user?.id ?? GUEST_USER_ID;
 			return await resumeService.update({
 				id: input.id,
-				userId: context.user.id,
+				userId,
 				name: input.name,
 				slug: input.slug,
 				tags: input.tags,
@@ -251,7 +280,7 @@ export const resumeRouter = {
 			});
 		}),
 
-	setLocked: protectedProcedure
+	setLocked: publicProcedure
 		.route({
 			method: "POST",
 			path: "/resume/{id}/set-locked",
@@ -262,14 +291,15 @@ export const resumeRouter = {
 		.input(z.object({ id: z.string(), isLocked: z.boolean() }))
 		.output(z.void())
 		.handler(async ({ context, input }) => {
+			const userId = context.user?.id ?? GUEST_USER_ID;
 			return await resumeService.setLocked({
 				id: input.id,
-				userId: context.user.id,
+				userId,
 				isLocked: input.isLocked,
 			});
 		}),
 
-	setPassword: protectedProcedure
+	setPassword: publicProcedure
 		.route({
 			method: "POST",
 			path: "/resume/{id}/set-password",
@@ -280,14 +310,15 @@ export const resumeRouter = {
 		.input(z.object({ id: z.string(), password: z.string().min(6).max(64) }))
 		.output(z.void())
 		.handler(async ({ context, input }) => {
+			const userId = context.user?.id ?? GUEST_USER_ID;
 			return await resumeService.setPassword({
 				id: input.id,
-				userId: context.user.id,
+				userId,
 				password: input.password,
 			});
 		}),
 
-	removePassword: protectedProcedure
+	removePassword: publicProcedure
 		.route({
 			method: "POST",
 			path: "/resume/{id}/remove-password",
@@ -298,13 +329,14 @@ export const resumeRouter = {
 		.input(z.object({ id: z.string() }))
 		.output(z.void())
 		.handler(async ({ context, input }) => {
+			const userId = context.user?.id ?? GUEST_USER_ID;
 			return await resumeService.removePassword({
 				id: input.id,
-				userId: context.user.id,
+				userId,
 			});
 		}),
 
-	duplicate: protectedProcedure
+	duplicate: publicProcedure
 		.route({
 			method: "POST",
 			path: "/resume/{id}/duplicate",
@@ -322,10 +354,11 @@ export const resumeRouter = {
 		)
 		.output(z.string().describe("The ID of the duplicated resume."))
 		.handler(async ({ context, input }) => {
-			const original = await resumeService.getById({ id: input.id, userId: context.user.id });
+			const userId = context.user?.id ?? GUEST_USER_ID;
+			const original = await resumeService.getById({ id: input.id, userId });
 
 			return await resumeService.create({
-				userId: context.user.id,
+				userId,
 				name: input.name ?? original.name,
 				slug: input.slug ?? original.slug,
 				tags: input.tags ?? original.tags,
@@ -334,7 +367,7 @@ export const resumeRouter = {
 			});
 		}),
 
-	delete: protectedProcedure
+	delete: publicProcedure
 		.route({
 			method: "DELETE",
 			path: "/resume/{id}",
@@ -345,6 +378,7 @@ export const resumeRouter = {
 		.input(z.object({ id: z.string() }))
 		.output(z.void())
 		.handler(async ({ context, input }) => {
-			return await resumeService.delete({ id: input.id, userId: context.user.id });
+			const userId = context.user?.id ?? GUEST_USER_ID;
+			return await resumeService.delete({ id: input.id, userId });
 		}),
 };

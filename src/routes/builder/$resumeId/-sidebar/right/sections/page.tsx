@@ -3,7 +3,6 @@ import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { useForm } from "react-hook-form";
 import type z from "zod";
-import { getLocaleOptions } from "@/components/locale/combobox";
 import { useResumeStore } from "@/components/resume/store/resume";
 import { Combobox } from "@/components/ui/combobox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -43,29 +42,6 @@ function PageSectionForm() {
 	return (
 		<Form {...form}>
 			<form onChange={form.handleSubmit(onSubmit)} className="grid @md:grid-cols-2 grid-cols-1 gap-4">
-				<FormField
-					control={form.control}
-					name="locale"
-					render={({ field }) => (
-						<FormItem className="col-span-full">
-							<FormLabel>
-								<Trans>Language</Trans>
-							</FormLabel>
-							<FormControl>
-								<Combobox
-									options={getLocaleOptions()}
-									value={field.value}
-									onValueChange={(locale) => {
-										field.onChange(locale);
-										form.handleSubmit(onSubmit)();
-									}}
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-
 				<FormField
 					control={form.control}
 					name="format"

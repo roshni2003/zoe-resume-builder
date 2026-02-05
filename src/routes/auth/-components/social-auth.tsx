@@ -1,8 +1,8 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
-import { FingerprintSimpleIcon, GithubLogoIcon, GoogleLogoIcon, VaultIcon } from "@phosphor-icons/react";
+import { FingerprintSimpleIcon, GithubLogoIcon, GoogleLogoIcon, UserCircleIcon, VaultIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "@tanstack/react-router";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/integrations/auth/client";
@@ -11,7 +11,15 @@ import { cn } from "@/utils/style";
 
 export function SocialAuth() {
 	const router = useRouter();
+	const navigate = useNavigate();
 	const { data: authProviders = {} } = useQuery(orpc.auth.providers.list.queryOptions());
+
+	const handleGuestAccess = () => {
+		// Set a flag in localStorage to indicate guest mode
+		localStorage.setItem("guestMode", "true");
+		toast.success(t`Continuing as guest`);
+		navigate({ to: "/dashboard/resumes" });
+	};
 
 	const handlePasskeyLogin = async () => {
 		const toastId = toast.loading(t`Signing in...`);
@@ -75,6 +83,15 @@ export function SocialAuth() {
 
 			<div>
 				<div className="grid grid-cols-2 gap-4">
+					<Button
+						variant="outline"
+						onClick={handleGuestAccess}
+						className="col-span-full border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+					>
+						<UserCircleIcon />
+						<Trans>Continue as Guest</Trans>
+					</Button>
+
 					<Button
 						variant="secondary"
 						onClick={handlePasskeyLogin}

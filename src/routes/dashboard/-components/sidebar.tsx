@@ -4,18 +4,12 @@ import { useLingui } from "@lingui/react";
 import { Trans } from "@lingui/react/macro";
 import {
 	BrainIcon,
-	GearSixIcon,
-	KeyIcon,
 	ReadCvLogoIcon,
-	ShieldCheckIcon,
 	UserCircleIcon,
-	WarningIcon,
 } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
-import { AnimatePresence, motion } from "motion/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BrandIcon } from "@/components/ui/brand-icon";
-import { Copyright } from "@/components/ui/copyright";
 import {
 	Sidebar,
 	SidebarContent,
@@ -29,7 +23,6 @@ import {
 	SidebarMenuItem,
 	SidebarRail,
 	SidebarSeparator,
-	useSidebarState,
 } from "@/components/ui/sidebar";
 import { UserDropdownMenu } from "@/components/user/dropdown-menu";
 import { getInitials } from "@/utils/string";
@@ -55,29 +48,9 @@ const settingsSidebarItems = [
 		href: "/dashboard/settings/profile",
 	},
 	{
-		icon: <GearSixIcon />,
-		label: msg`Preferences`,
-		href: "/dashboard/settings/preferences",
-	},
-	{
-		icon: <ShieldCheckIcon />,
-		label: msg`Authentication`,
-		href: "/dashboard/settings/authentication",
-	},
-	{
-		icon: <KeyIcon />,
-		label: msg`API Keys`,
-		href: "/dashboard/settings/api-keys",
-	},
-	{
 		icon: <BrainIcon />,
 		label: msg`Artificial Intelligence`,
 		href: "/dashboard/settings/ai",
-	},
-	{
-		icon: <WarningIcon />,
-		label: msg`Danger Zone`,
-		href: "/dashboard/settings/danger-zone",
 	},
 ] as const satisfies SidebarItem[];
 
@@ -107,8 +80,6 @@ function SidebarItemList({ items }: SidebarItemListProps) {
 }
 
 export function DashboardSidebar() {
-	const { state } = useSidebarState();
-
 	return (
 		<Sidebar variant="floating" collapsible="icon">
 			<SidebarHeader>
@@ -170,19 +141,6 @@ export function DashboardSidebar() {
 						</UserDropdownMenu>
 					</SidebarMenuItem>
 				</SidebarMenu>
-
-				<AnimatePresence>
-					{state === "expanded" && (
-						<motion.div
-							key="copyright"
-							initial={{ y: 50, height: 0, opacity: 0 }}
-							animate={{ y: 0, height: "auto", opacity: 1 }}
-							exit={{ y: 50, height: 0, opacity: 0 }}
-						>
-							<Copyright className="wrap-break-word shrink-0 whitespace-normal p-2" />
-						</motion.div>
-					)}
-				</AnimatePresence>
 			</SidebarFooter>
 
 			<SidebarRail />

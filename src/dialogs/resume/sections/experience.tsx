@@ -1,11 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
-import { useForm, useFormContext } from "react-hook-form";
+import { useForm, useFormContext, useWatch } from "react-hook-form";
 import type z from "zod";
 import { RichInput } from "@/components/input/rich-input";
 import { URLInput } from "@/components/input/url-input";
 import { useResumeStore } from "@/components/resume/store/resume";
+import { AIGenerateButton } from "@/components/ui/ai-generate-button";
 import { Button } from "@/components/ui/button";
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -151,6 +152,14 @@ export function UpdateExperienceDialog({ data }: DialogProps<"resume.sections.ex
 function ExperienceForm() {
 	const form = useFormContext<FormValues>();
 
+	const company = useWatch({ control: form.control, name: "company" });
+	const position = useWatch({ control: form.control, name: "position" });
+	const description = useWatch({ control: form.control, name: "description" });
+
+	const handleAIGenerated = (content: string) => {
+		form.setValue("description", content, { shouldDirty: true });
+	};
+
 	return (
 		<>
 			<FormField
@@ -258,9 +267,24 @@ function ExperienceForm() {
 				name="description"
 				render={({ field }) => (
 					<FormItem className="sm:col-span-full">
-						<FormLabel>
-							<Trans>Description</Trans>
-						</FormLabel>
+						<div className="flex items-center justify-between">
+							<FormLabel>
+								<Trans>Description</Trans>
+							</FormLabel>
+							{(company || position) && (
+								<AIGenerateButton
+									type="experience"
+									data={{
+										company,
+										position,
+										title: position,
+										responsibilities: description,
+										projectDetails: "",
+									}}
+									onGenerated={handleAIGenerated}
+								/>
+							)}
+						</div>
 						<FormControl>
 							<RichInput {...field} value={field.value} onChange={field.onChange} />
 						</FormControl>
