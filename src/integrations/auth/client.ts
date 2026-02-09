@@ -16,9 +16,9 @@ const getAuthClient = () => {
 			usernameClient(),
 			twoFactorClient({
 				onTwoFactorRedirect() {
-					// Redirect to 2FA verification page
+					// 2FA UI removed; redirect users to resumes list instead
 					if (typeof window !== "undefined") {
-						window.location.href = "/auth/verify-2fa";
+						window.location.href = "/dashboard/resumes";
 					}
 				},
 			}),

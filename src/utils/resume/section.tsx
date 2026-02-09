@@ -4,10 +4,8 @@ import {
 	BooksIcon,
 	BriefcaseIcon,
 	CertificateIcon,
-	ChartLineIcon,
 	CodeSimpleIcon,
 	CompassToolIcon,
-	DiamondsFourIcon,
 	DownloadIcon,
 	EnvelopeSimpleIcon,
 	FileCssIcon,
@@ -16,7 +14,6 @@ import {
 	HandHeartIcon,
 	type IconProps,
 	ImageIcon,
-	InfoIcon,
 	LayoutIcon,
 	MessengerLogoIcon,
 	NotepadIcon,
@@ -39,18 +36,7 @@ export type LeftSidebarSection = "picture" | "basics" | "summary" | SectionType 
 // CustomSectionType values that are not in SectionType (used in custom sections only)
 type CustomOnlyType = "cover-letter";
 
-export type RightSidebarSection =
-	| "template"
-	| "layout"
-	| "typography"
-	| "design"
-	| "page"
-	| "css"
-	| "notes"
-	| "sharing"
-	| "statistics"
-	| "export"
-	| "information";
+export type RightSidebarSection = "layout" | "typography" | "design" | "page" | "css" | "notes" | "sharing" | "export";
 
 export type SidebarSection = LeftSidebarSection | RightSidebarSection;
 
@@ -74,7 +60,6 @@ export const leftSidebarSections: LeftSidebarSection[] = [
 ] as const;
 
 export const rightSidebarSections: RightSidebarSection[] = [
-	"template",
 	"layout",
 	"typography",
 	"design",
@@ -82,9 +67,7 @@ export const rightSidebarSections: RightSidebarSection[] = [
 	"css",
 	"notes",
 	"sharing",
-	"statistics",
 	"export",
-	"information",
 ] as const;
 
 export const getSectionTitle = (type: SidebarSection | CustomOnlyType): string => {
@@ -112,7 +95,6 @@ export const getSectionTitle = (type: SidebarSection | CustomOnlyType): string =
 			.with("cover-letter", () => t`Cover Letter`)
 
 			// Right Sidebar Sections
-			.with("template", () => t`Template`)
 			.with("layout", () => t`Layout`)
 			.with("typography", () => t`Typography`)
 			.with("design", () => t`Design`)
@@ -120,10 +102,7 @@ export const getSectionTitle = (type: SidebarSection | CustomOnlyType): string =
 			.with("css", () => t`Custom CSS`)
 			.with("notes", () => t`Notes`)
 			.with("sharing", () => t`Sharing`)
-			.with("statistics", () => t`Statistics`)
 			.with("export", () => t`Export`)
-			.with("information", () => t`Information`)
-
 			.exhaustive()
 	);
 };
@@ -155,7 +134,6 @@ export const getSectionIcon = (type: SidebarSection | CustomOnlyType, props?: Ic
 			.with("cover-letter", () => <EnvelopeSimpleIcon {...iconProps} />)
 
 			// Right Sidebar Sections
-			.with("template", () => <DiamondsFourIcon {...iconProps} />)
 			.with("layout", () => <LayoutIcon {...iconProps} />)
 			.with("typography", () => <TextTIcon {...iconProps} />)
 			.with("design", () => <PaletteIcon {...iconProps} />)
@@ -163,10 +141,7 @@ export const getSectionIcon = (type: SidebarSection | CustomOnlyType, props?: Ic
 			.with("css", () => <FileCssIcon {...iconProps} />)
 			.with("notes", () => <NotepadIcon {...iconProps} />)
 			.with("sharing", () => <ShareFatIcon {...iconProps} />)
-			.with("statistics", () => <ChartLineIcon {...iconProps} />)
 			.with("export", () => <DownloadIcon {...iconProps} />)
-			.with("information", () => <InfoIcon {...iconProps} />)
-
 			.exhaustive()
 	);
 };

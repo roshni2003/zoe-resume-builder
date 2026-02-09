@@ -1,11 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trans } from "@lingui/react/macro";
 import { PencilSimpleLineIcon, PlusIcon } from "@phosphor-icons/react";
-import { useForm, useFormContext } from "react-hook-form";
+import { useForm, useFormContext, useWatch } from "react-hook-form";
 import type z from "zod";
 import { RichInput } from "@/components/input/rich-input";
 import { URLInput } from "@/components/input/url-input";
 import { useResumeStore } from "@/components/resume/store/resume";
+import { AIGenerateButton } from "@/components/ui/ai-generate-button";
 import { Button } from "@/components/ui/button";
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -147,6 +148,13 @@ export function UpdateProjectDialog({ data }: DialogProps<"resume.sections.proje
 function ProjectForm() {
 	const form = useFormContext<FormValues>();
 
+	const name = useWatch({ control: form.control, name: "name" });
+	const description = useWatch({ control: form.control, name: "description" });
+
+	const handleAIGenerated = (content: string) => {
+		form.setValue("description", content, { shouldDirty: true });
+	};
+
 	return (
 		<>
 			<FormField
@@ -222,9 +230,23 @@ function ProjectForm() {
 				name="description"
 				render={({ field }) => (
 					<FormItem className="sm:col-span-full">
-						<FormLabel>
-							<Trans>Description</Trans>
-						</FormLabel>
+						<div className="flex items-center justify-between">
+							<FormLabel>
+								<Trans>Description</Trans>
+							</FormLabel>
+							{name && (
+								<AIGenerateButton
+									type="projects"
+									data={{
+										name,
+										technologies: "",
+										description,
+										highlights: "",
+									}}
+									onGenerated={handleAIGenerated}
+								/>
+							)}
+						</div>
 						<FormControl>
 							<RichInput {...field} value={field.value} onChange={field.onChange} />
 						</FormControl>

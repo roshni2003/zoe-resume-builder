@@ -15,7 +15,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
-import { useAIStore } from "@/integrations/ai/store";
+import type { AIProvider } from "@/integrations/ai/types";
 import { JSONResumeImporter } from "@/integrations/import/json-resume";
 import { ReactiveResumeJSONImporter } from "@/integrations/import/reactive-resume-json";
 import { ReactiveResumeV4JSONImporter } from "@/integrations/import/reactive-resume-v4-json";
@@ -64,7 +64,13 @@ const formSchema = z.discriminatedUnion("type", [
 type FormValues = z.infer<typeof formSchema>;
 
 export function ImportResumeDialog(_: DialogProps<"resume.import">) {
-	const { enabled: isAIEnabled, provider, model, apiKey, baseURL } = useAIStore();
+	// Use environment variables for AI configuration
+	const provider = (import.meta.env.VITE_AI_PROVIDER || "gemini") as AIProvider;
+	const model = import.meta.env.VITE_AI_MODEL || "gemini-1.5-flash";
+	const apiKey = import.meta.env.VITE_AI_API_KEY || "";
+	const baseURL = import.meta.env.VITE_AI_BASE_URL || "https://generativelanguage.googleapis.com/v1beta";
+	const isAIEnabled = !!apiKey && !!model;
+
 	const closeDialog = useDialogStore((state) => state.closeDialog);
 
 	const prevTypeRef = useRef<string>("");

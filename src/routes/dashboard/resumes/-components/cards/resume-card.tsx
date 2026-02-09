@@ -40,10 +40,18 @@ export function ResumeCard({ resume }: ResumeCardProps) {
 							<img
 								src={imageSrc}
 								alt={resume.name}
-								className={cn("size-full object-cover transition-all", resume.isLocked && "blur-xs")}
+								className={cn("size-full object-cover object-top transition-all", resume.isLocked && "blur-xs")}
 							/>
 						))
-						.otherwise(() => null)}
+						.otherwise(() => (
+							<div className="relative size-full overflow-hidden bg-white">
+								<iframe
+									src={`/printer/${resume.id}`}
+									title={resume.name}
+									className="pointer-events-none absolute top-0 left-1/2 h-[600%] w-[600%] origin-top -translate-x-1/2 scale-[0.167] border-0"
+								/>
+							</div>
+						))}
 
 					<ResumeLockOverlay isLocked={resume.isLocked} />
 				</BaseCard>

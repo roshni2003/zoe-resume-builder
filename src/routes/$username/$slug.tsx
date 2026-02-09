@@ -1,8 +1,7 @@
 import { Trans } from "@lingui/react/macro";
-import { ORPCError } from "@orpc/client";
 import { DownloadSimpleIcon } from "@phosphor-icons/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useCallback, useEffect } from "react";
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { ResumePreview } from "@/components/resume/preview";
@@ -32,22 +31,7 @@ export const Route = createFileRoute("/$username/$slug")({
 	head: ({ loaderData }) => ({
 		meta: [{ title: loaderData ? `${loaderData.resume.name} - Reactive Resume` : "Reactive Resume" }],
 	}),
-	onError: (error) => {
-		if (error instanceof ORPCError && error.code === "NEED_PASSWORD") {
-			const data = error.data as { username?: string; slug?: string } | undefined;
-			const username = data?.username;
-			const slug = data?.slug;
-
-			if (username && slug) {
-				throw redirect({
-					to: "/auth/resume-password",
-					search: { redirect: `/${username}/${slug}` },
-				});
-			}
-		}
-
-		throw notFound();
-	},
+	// Authentication and password-protected resumes are not supported in this build.
 });
 
 function RouteComponent() {

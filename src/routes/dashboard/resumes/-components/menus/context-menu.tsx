@@ -87,36 +87,62 @@ export function ResumeContextMenu({ resume, children }: Props) {
 		<ContextMenu>
 			<ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
 
-			<ContextMenuContent>
-				<ContextMenuItem asChild>
-					<Link to="/builder/$resumeId" params={{ resumeId: resume.id }}>
-						<FolderOpenIcon />
-						<Trans>Open</Trans>
+			<ContextMenuContent className="min-w-50 rounded-lg border-gray-200 bg-white p-1.5 shadow-lg">
+				<ContextMenuItem
+					asChild
+					className="rounded-md px-3 py-2.5 text-gray-900 hover:bg-emerald-50 hover:text-emerald-700 focus:bg-emerald-50 focus:text-emerald-700"
+				>
+					<Link to="/builder/$resumeId" params={{ resumeId: resume.id }} className="flex items-center gap-3">
+						<FolderOpenIcon className="size-4" />
+						<span className="font-medium">
+							<Trans>Open</Trans>
+						</span>
 					</Link>
 				</ContextMenuItem>
 
-				<ContextMenuSeparator />
+				<ContextMenuSeparator className="my-1.5 bg-gray-100" />
 
-				<ContextMenuItem disabled={resume.isLocked} onSelect={handleUpdate}>
-					<PencilSimpleLineIcon />
-					<Trans>Update</Trans>
+				<ContextMenuItem
+					disabled={resume.isLocked}
+					onSelect={handleUpdate}
+					className="flex items-center gap-3 rounded-md px-3 py-2.5 text-gray-900 hover:bg-emerald-50 hover:text-emerald-700 focus:bg-emerald-50 focus:text-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+				>
+					<PencilSimpleLineIcon className="size-4" />
+					<span className="font-medium">
+						<Trans>Update</Trans>
+					</span>
 				</ContextMenuItem>
 
-				<ContextMenuItem onSelect={handleDuplicate}>
-					<CopySimpleIcon />
-					<Trans>Duplicate</Trans>
+				<ContextMenuItem
+					onSelect={handleDuplicate}
+					className="flex items-center gap-3 rounded-md px-3 py-2.5 text-gray-900 hover:bg-emerald-50 hover:text-emerald-700 focus:bg-emerald-50 focus:text-emerald-700"
+				>
+					<CopySimpleIcon className="size-4" />
+					<span className="font-medium">
+						<Trans>Duplicate</Trans>
+					</span>
 				</ContextMenuItem>
 
-				<ContextMenuItem onSelect={handleToggleLock}>
-					{resume.isLocked ? <LockSimpleOpenIcon /> : <LockSimpleIcon />}
-					{resume.isLocked ? <Trans>Unlock</Trans> : <Trans>Lock</Trans>}
+				<ContextMenuItem
+					onSelect={handleToggleLock}
+					className="flex items-center gap-3 rounded-md px-3 py-2.5 text-gray-900 hover:bg-amber-50 hover:text-amber-700 focus:bg-amber-50 focus:text-amber-700"
+				>
+					{resume.isLocked ? <LockSimpleOpenIcon className="size-4" /> : <LockSimpleIcon className="size-4" />}
+					<span className="font-medium">{resume.isLocked ? <Trans>Unlock</Trans> : <Trans>Lock</Trans>}</span>
 				</ContextMenuItem>
 
-				<ContextMenuSeparator />
+				<ContextMenuSeparator className="my-1.5 bg-gray-100" />
 
-				<ContextMenuItem variant="destructive" disabled={resume.isLocked} onSelect={handleDelete}>
-					<TrashSimpleIcon />
-					<Trans>Delete</Trans>
+				<ContextMenuItem
+					variant="destructive"
+					disabled={resume.isLocked}
+					onSelect={handleDelete}
+					className="flex items-center gap-3 rounded-md px-3 py-2.5 text-red-600 hover:bg-red-50 hover:text-red-700 focus:bg-red-50 focus:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+				>
+					<TrashSimpleIcon className="size-4" />
+					<span className="font-medium">
+						<Trans>Delete</Trans>
+					</span>
 				</ContextMenuItem>
 			</ContextMenuContent>
 		</ContextMenu>

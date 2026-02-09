@@ -1,14 +1,10 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import {
-	GearIcon,
 	HouseSimpleIcon,
-	KeyIcon,
-	OpenAiLogoIcon,
 	ReadCvLogoIcon,
-	ShieldCheckIcon,
 	UserCircleIcon,
-	WarningIcon,
+	WrenchIcon,
 } from "@phosphor-icons/react";
 import { useNavigate, useRouteContext } from "@tanstack/react-router";
 import { CommandItem } from "@/components/ui/command";
@@ -27,7 +23,7 @@ export function NavigationCommandGroup() {
 	}
 
 	return (
-		<>
+<>
 			<BaseCommandGroup heading={<Trans>Go to...</Trans>}>
 				<CommandItem keywords={[t`Home`]} value="navigation.home" onSelect={() => onNavigate("/")}>
 					<HouseSimpleIcon />
@@ -50,7 +46,7 @@ export function NavigationCommandGroup() {
 					value="navigation.settings"
 					onSelect={() => pushPage("settings")}
 				>
-					<GearIcon />
+					<WrenchIcon />
 					<Trans>Settings</Trans>
 				</CommandItem>
 			</BaseCommandGroup>
@@ -63,51 +59,6 @@ export function NavigationCommandGroup() {
 				>
 					<UserCircleIcon />
 					<Trans>Profile</Trans>
-				</CommandItem>
-
-				<CommandItem
-					keywords={[t`Preferences`]}
-					value="navigation.settings.preferences"
-					onSelect={() => onNavigate("/dashboard/settings/preferences")}
-				>
-					<GearIcon />
-					<Trans>Preferences</Trans>
-				</CommandItem>
-
-				<CommandItem
-					keywords={[t`Authentication`]}
-					value="navigation.settings.authentication"
-					onSelect={() => onNavigate("/dashboard/settings/authentication")}
-				>
-					<ShieldCheckIcon />
-					<Trans>Authentication</Trans>
-				</CommandItem>
-
-				<CommandItem
-					keywords={[t`API Keys`]}
-					value="navigation.settings.api-keys"
-					onSelect={() => onNavigate("/dashboard/settings/api-keys")}
-				>
-					<KeyIcon />
-					<Trans>API Keys</Trans>
-				</CommandItem>
-
-				<CommandItem
-					keywords={[t`Artificial Intelligence`]}
-					value="navigation.settings.ai"
-					onSelect={() => onNavigate("/dashboard/settings/ai")}
-				>
-					<OpenAiLogoIcon />
-					<Trans>Artificial Intelligence</Trans>
-				</CommandItem>
-
-				<CommandItem
-					keywords={[t`Danger Zone`]}
-					value="navigation.settings.danger-zone"
-					onSelect={() => onNavigate("/dashboard/settings/danger-zone")}
-				>
-					<WarningIcon />
-					<Trans>Danger Zone</Trans>
 				</CommandItem>
 			</BaseCommandGroup>
 		</>

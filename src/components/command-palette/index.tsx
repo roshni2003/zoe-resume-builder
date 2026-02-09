@@ -4,7 +4,6 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Command, CommandEmpty, CommandInput, CommandList } from "../ui/command";
 import { NavigationCommandGroup } from "./pages/navigation";
-import { PreferencesCommandGroup } from "./pages/preferences";
 import { ResumesCommandGroup } from "./pages/resumes";
 import { useCommandPaletteStore } from "./store";
 
@@ -109,7 +108,6 @@ export function CommandPalette() {
 						</CommandEmpty>
 
 						<ResumesCommandGroup />
-						<PreferencesCommandGroup />
 						<NavigationCommandGroup />
 					</CommandList>
 				</Command>

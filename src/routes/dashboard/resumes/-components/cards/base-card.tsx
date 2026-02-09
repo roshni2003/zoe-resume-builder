@@ -16,19 +16,23 @@ export function BaseCard({ title, description, tags, className, children, ...pro
 			<div
 				{...props}
 				className={cn(
-					"relative flex aspect-page size-full overflow-hidden rounded-md bg-popover shadow transition-shadow hover:shadow-xl",
+					"group relative flex aspect-page size-full cursor-pointer overflow-hidden rounded-xl border-2 border-gray-200 bg-white shadow-sm transition-all hover:border-emerald-300 hover:shadow-xl",
 					className,
 				)}
 			>
 				{children}
 
-				<div className="absolute inset-x-0 bottom-0 flex w-full flex-col justify-end space-y-0.5 bg-background/40 px-4 py-3 backdrop-blur-xs">
-					<h3 className="truncate font-medium tracking-tight">{title}</h3>
-					<p className="truncate text-xs opacity-80">{description}</p>
+				<div className="absolute inset-x-0 bottom-0 w-full border-gray-200 border-t bg-linear-to-t from-white via-white to-transparent p-4">
+					<h3 className="mb-1.5 truncate font-semibold text-gray-900 text-lg">{title}</h3>
+					<p className="truncate text-gray-600 text-sm">{description}</p>
 
-					<div className={cn("mt-2 hidden flex-wrap items-center gap-1", tags && tags.length > 0 && "flex")}>
+					<div className={cn("mt-3 hidden flex-wrap items-center gap-1.5", tags && tags.length > 0 && "flex")}>
 						{tags?.map((tag) => (
-							<Badge key={tag} variant="secondary">
+							<Badge
+								key={tag}
+								variant="secondary"
+								className="rounded-md bg-emerald-50 px-2 py-0.5 text-emerald-700 text-xs"
+							>
 								{tag}
 							</Badge>
 						))}

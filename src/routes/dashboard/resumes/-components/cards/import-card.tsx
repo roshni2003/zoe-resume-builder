@@ -12,8 +12,10 @@ export function ImportResumeCard() {
 			description={t`Continue where you left off`}
 			onClick={() => openDialog("resume.import", undefined)}
 		>
-			<div className="absolute inset-0 flex items-center justify-center">
-				<DownloadSimpleIcon weight="thin" className="size-12" />
+			<div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-blue-50 to-blue-100">
+				<div className="flex size-16 items-center justify-center rounded-full bg-blue-600 shadow-lg">
+					<DownloadSimpleIcon weight="bold" className="size-8 text-white" />
+				</div>
 			</div>
 		</BaseCard>
 	);

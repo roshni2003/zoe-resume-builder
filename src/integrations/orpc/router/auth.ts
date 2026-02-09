@@ -1,5 +1,5 @@
 import z from "zod";
-import { protectedProcedure, publicProcedure } from "../context";
+import { publicProcedure } from "../context";
 import { authService, type ProviderList } from "../services/auth";
 
 export const authRouter = {
@@ -40,17 +40,5 @@ export const authRouter = {
 				username: input.username,
 				password: input.password,
 			});
-		}),
-
-	deleteAccount: protectedProcedure
-		.route({
-			method: "DELETE",
-			path: "/auth/delete-account",
-			tags: ["Authentication"],
-			summary: "Delete user account",
-			description: "Delete the authenticated user's account and all associated data.",
-		})
-		.handler(async ({ context }): Promise<void> => {
-			return await authService.deleteAccount({ userId: context.user.id });
 		}),
 };

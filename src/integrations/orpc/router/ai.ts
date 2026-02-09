@@ -1,11 +1,11 @@
 import { ORPCError } from "@orpc/client";
 import { AISDKError } from "ai";
 import z, { ZodError } from "zod";
-import { protectedProcedure } from "../context";
+import { publicProcedure } from "../context";
 import { aiCredentialsSchema, aiProviderSchema, aiService, fileInputSchema, formatZodError } from "../services/ai";
 
 export const aiRouter = {
-	testConnection: protectedProcedure
+	testConnection: publicProcedure
 		.input(
 			z.object({
 				provider: aiProviderSchema,
@@ -26,7 +26,27 @@ export const aiRouter = {
 			}
 		}),
 
-	parsePdf: protectedProcedure
+	generateContent: publicProcedure
+		.input(
+			z.object({
+				...aiCredentialsSchema.shape,
+				type: z.enum(["experience", "projects", "summary", "custom"]),
+				data: z.record(z.string(), z.unknown()),
+			}),
+		)
+		.handler(async ({ input }) => {
+			try {
+				return await aiService.generateContent(input);
+			} catch (error) {
+				if (error instanceof AISDKError) {
+					throw new ORPCError("BAD_GATEWAY", { message: error.message });
+				}
+
+				throw error;
+			}
+		}),
+
+	parsePdf: publicProcedure
 		.input(
 			z.object({
 				...aiCredentialsSchema.shape,
@@ -48,7 +68,7 @@ export const aiRouter = {
 			}
 		}),
 
-	parseDocx: protectedProcedure
+	parseDocx: publicProcedure
 		.input(
 			z.object({
 				...aiCredentialsSchema.shape,
