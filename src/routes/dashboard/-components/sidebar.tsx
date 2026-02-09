@@ -2,11 +2,7 @@ import type { MessageDescriptor } from "@lingui/core";
 import { msg } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react";
 import { Trans } from "@lingui/react/macro";
-import {
-	BrainIcon,
-	ReadCvLogoIcon,
-	UserCircleIcon,
-} from "@phosphor-icons/react";
+import { ReadCvLogoIcon, UserCircleIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BrandIcon } from "@/components/ui/brand-icon";
@@ -47,11 +43,6 @@ const settingsSidebarItems = [
 		label: msg`Profile`,
 		href: "/dashboard/settings/profile",
 	},
-	{
-		icon: <BrainIcon />,
-		label: msg`Artificial Intelligence`,
-		href: "/dashboard/settings/ai",
-	},
 ] as const satisfies SidebarItem[];
 
 type SidebarItemListProps = {
@@ -66,7 +57,7 @@ function SidebarItemList({ items }: SidebarItemListProps) {
 			{items.map((item) => (
 				<SidebarMenuItem key={item.href}>
 					<SidebarMenuButton asChild title={i18n.t(item.label)}>
-						<Link to={item.href} activeProps={{ className: "bg-sidebar-accent" }}>
+						<Link to={item.href} activeProps={{ className: "bg-emerald-50 text-emerald-700" }}>
 							{item.icon}
 							<span className="shrink-0 transition-[margin,opacity] duration-200 ease-in-out group-data-[collapsible=icon]:-ms-8 group-data-[collapsible=icon]:opacity-0">
 								{i18n.t(item.label)}

@@ -12,8 +12,10 @@ export function CreateResumeCard() {
 			description={t`Start building your resume from scratch`}
 			onClick={() => openDialog("resume.create", undefined)}
 		>
-			<div className="absolute inset-0 flex items-center justify-center">
-				<PlusIcon weight="thin" className="size-12" />
+			<div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-emerald-50 to-emerald-100">
+				<div className="flex size-16 items-center justify-center rounded-full bg-emerald-600 shadow-lg">
+					<PlusIcon weight="bold" className="size-8 text-white" />
+				</div>
 			</div>
 		</BaseCard>
 	);

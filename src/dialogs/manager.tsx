@@ -1,8 +1,5 @@
 import { match } from "ts-pattern";
 import { Dialog } from "@/components/ui/dialog";
-import { ChangePasswordDialog } from "./auth/change-password";
-import { DisableTwoFactorDialog } from "./auth/disable-two-factor";
-import { EnableTwoFactorDialog } from "./auth/enable-two-factor";
 import { CreateResumeDialog, DuplicateResumeDialog, UpdateResumeDialog } from "./resume";
 import { ImportResumeDialog } from "./resume/import";
 import { CreateAwardDialog, UpdateAwardDialog } from "./resume/sections/award";
@@ -27,9 +24,6 @@ export function DialogManager() {
 	const { open, activeDialog, onOpenChange } = useDialogStore();
 
 	const dialogContent = match(activeDialog)
-		.with({ type: "auth.change-password" }, () => <ChangePasswordDialog />)
-		.with({ type: "auth.two-factor.enable" }, () => <EnableTwoFactorDialog />)
-		.with({ type: "auth.two-factor.disable" }, () => <DisableTwoFactorDialog />)
 		.with({ type: "resume.create" }, () => <CreateResumeDialog />)
 		.with({ type: "resume.update" }, ({ data }) => <UpdateResumeDialog data={data} />)
 		.with({ type: "resume.duplicate" }, ({ data }) => <DuplicateResumeDialog data={data} />)

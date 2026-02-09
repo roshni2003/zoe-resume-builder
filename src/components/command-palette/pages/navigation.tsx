@@ -1,11 +1,10 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import {
-	GearIcon,
 	HouseSimpleIcon,
-	OpenAiLogoIcon,
 	ReadCvLogoIcon,
 	UserCircleIcon,
+	WrenchIcon,
 } from "@phosphor-icons/react";
 import { useNavigate, useRouteContext } from "@tanstack/react-router";
 import { CommandItem } from "@/components/ui/command";
@@ -24,7 +23,7 @@ export function NavigationCommandGroup() {
 	}
 
 	return (
-		<>
+<>
 			<BaseCommandGroup heading={<Trans>Go to...</Trans>}>
 				<CommandItem keywords={[t`Home`]} value="navigation.home" onSelect={() => onNavigate("/")}>
 					<HouseSimpleIcon />
@@ -47,7 +46,7 @@ export function NavigationCommandGroup() {
 					value="navigation.settings"
 					onSelect={() => pushPage("settings")}
 				>
-					<GearIcon />
+					<WrenchIcon />
 					<Trans>Settings</Trans>
 				</CommandItem>
 			</BaseCommandGroup>
@@ -60,24 +59,6 @@ export function NavigationCommandGroup() {
 				>
 					<UserCircleIcon />
 					<Trans>Profile</Trans>
-				</CommandItem>
-
-				<CommandItem
-					keywords={[t`Preferences`]}
-					value="navigation.settings.preferences"
-					onSelect={() => onNavigate("/dashboard/settings/preferences")}
-				>
-					<GearIcon />
-					<Trans>Preferences</Trans>
-				</CommandItem>
-
-				<CommandItem
-					keywords={[t`Artificial Intelligence`]}
-					value="navigation.settings.ai"
-					onSelect={() => onNavigate("/dashboard/settings/ai")}
-				>
-					<OpenAiLogoIcon />
-					<Trans>Artificial Intelligence</Trans>
 				</CommandItem>
 			</BaseCommandGroup>
 		</>

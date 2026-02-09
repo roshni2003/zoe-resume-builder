@@ -3,7 +3,7 @@ import { Trans } from "@lingui/react/macro";
 import { SparkleIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useAIStore } from "@/integrations/ai/store";
+import type { AIProvider } from "@/integrations/ai/types";
 import { orpc } from "@/integrations/orpc/client";
 import { Button } from "./button";
 
@@ -16,20 +16,20 @@ type AIGenerateButtonProps = {
 };
 
 export function AIGenerateButton({ type, data, onGenerated, disabled, className }: AIGenerateButtonProps) {
-	const { enabled: isAIEnabled, provider, model, apiKey, baseURL } = useAIStore();
+	// Use environment variables for AI configuration
+	const provider = (import.meta.env.VITE_AI_PROVIDER || "gemini") as AIProvider;
+	const model = import.meta.env.VITE_AI_MODEL || "gemini-1.5-flash";
+	const apiKey = import.meta.env.VITE_AI_API_KEY || "";
+	const baseURL = import.meta.env.VITE_AI_BASE_URL || "https://generativelanguage.googleapis.com/v1beta";
 
 	const { mutate: generateContent, isPending } = useMutation(orpc.ai.generateContent.mutationOptions());
 
-	const isConfigured = apiKey && model;
+	const isConfigured = !!apiKey && !!model;
 
 	const handleGenerate = () => {
 		if (!isConfigured) {
-			toast.error(t`AI is not configured. Please add your API key and model in Settings → AI.`);
+			toast.error(t`AI is not configured. Please set VITE_AI_API_KEY and VITE_AI_MODEL in your .env file.`);
 			return;
-		}
-
-		if (!isAIEnabled) {
-			toast.warning(t`AI is disabled in settings, but attempting to generate anyway...`);
 		}
 
 		const toastId = toast.loading(t`Generating content with AI...`);
@@ -55,10 +55,9 @@ export function AIGenerateButton({ type, data, onGenerated, disabled, className 
 		);
 	};
 
-	// Only disable if not configured or pending, ignore the enabled flag for better UX
 	const isDisabled = disabled || isPending || !isConfigured;
 	const buttonTitle = !isConfigured
-		? "Configure AI in Settings → AI (add API key and model)"
+		? "Configure AI in .env file (add VITE_AI_API_KEY and VITE_AI_MODEL)"
 		: isPending
 			? "Generating..."
 			: "Generate content with AI";
