@@ -6,7 +6,6 @@ import { useParams } from "@tanstack/react-router";
 import { Accordion, AccordionContent, AccordionItem } from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { orpc } from "@/integrations/orpc/client";
-import { SectionBase } from "../shared/section-base";
 
 export function StatisticsSectionBuilder() {
 	const params = useParams({ from: "/builder/$resumeId" });
@@ -17,7 +16,7 @@ export function StatisticsSectionBuilder() {
 	if (!statistics) return null;
 
 	return (
-		<SectionBase type="statistics">
+		<div>
 			<Accordion collapsible type="single" value={statistics.isPublic ? "isPublic" : "isPrivate"}>
 				<AccordionItem value="isPrivate">
 					<AccordionContent className="pb-0">
@@ -54,7 +53,7 @@ export function StatisticsSectionBuilder() {
 					</AccordionContent>
 				</AccordionItem>
 			</Accordion>
-		</SectionBase>
+		</div>
 	);
 }
 

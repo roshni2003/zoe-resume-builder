@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 import { BetterAuthError } from "@better-auth/core/error";
 import { passkey } from "@better-auth/passkey";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
