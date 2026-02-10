@@ -13,8 +13,10 @@ import { Route as SchemaDotjsonRouteImport } from "./routes/schema[.]json";
 import { Route as DashboardRouteRouteImport } from "./routes/dashboard/route";
 import { Route as HomeRouteRouteImport } from "./routes/_home/route";
 import { Route as DashboardIndexRouteImport } from "./routes/dashboard/index";
+import { Route as AuthIndexRouteImport } from "./routes/auth/index";
 import { Route as HomeIndexRouteImport } from "./routes/_home/index";
 import { Route as PrinterResumeIdRouteImport } from "./routes/printer/$resumeId";
+import { Route as AuthLoginRouteImport } from "./routes/auth/login";
 import { Route as ApiHealthRouteImport } from "./routes/api/health";
 import { Route as UsernameSlugRouteImport } from "./routes/$username/$slug";
 import { Route as BuilderResumeIdRouteRouteImport } from "./routes/builder/$resumeId/route";
@@ -45,6 +47,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   path: "/",
   getParentRoute: () => DashboardRouteRoute,
 } as any);
+const AuthIndexRoute = AuthIndexRouteImport.update({
+  id: "/auth/",
+  path: "/auth/",
+  getParentRoute: () => rootRouteImport,
+} as any);
 const HomeIndexRoute = HomeIndexRouteImport.update({
   id: "/",
   path: "/",
@@ -53,6 +60,11 @@ const HomeIndexRoute = HomeIndexRouteImport.update({
 const PrinterResumeIdRoute = PrinterResumeIdRouteImport.update({
   id: "/printer/$resumeId",
   path: "/printer/$resumeId",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: "/auth/login",
+  path: "/auth/login",
   getParentRoute: () => rootRouteImport,
 } as any);
 const ApiHealthRoute = ApiHealthRouteImport.update({
@@ -114,7 +126,9 @@ export interface FileRoutesByFullPath {
   "/builder/$resumeId": typeof BuilderResumeIdRouteRouteWithChildren;
   "/$username/$slug": typeof UsernameSlugRoute;
   "/api/health": typeof ApiHealthRoute;
+  "/auth/login": typeof AuthLoginRoute;
   "/printer/$resumeId": typeof PrinterResumeIdRoute;
+  "/auth/": typeof AuthIndexRoute;
   "/dashboard/": typeof DashboardIndexRoute;
   "/api/auth/$": typeof ApiAuthSplatRoute;
   "/api/openapi/$": typeof ApiOpenapiSplatRoute;
@@ -128,8 +142,10 @@ export interface FileRoutesByTo {
   "/schema.json": typeof SchemaDotjsonRoute;
   "/$username/$slug": typeof UsernameSlugRoute;
   "/api/health": typeof ApiHealthRoute;
+  "/auth/login": typeof AuthLoginRoute;
   "/printer/$resumeId": typeof PrinterResumeIdRoute;
   "/": typeof HomeIndexRoute;
+  "/auth": typeof AuthIndexRoute;
   "/dashboard": typeof DashboardIndexRoute;
   "/api/auth/$": typeof ApiAuthSplatRoute;
   "/api/openapi/$": typeof ApiOpenapiSplatRoute;
@@ -147,8 +163,10 @@ export interface FileRoutesById {
   "/builder/$resumeId": typeof BuilderResumeIdRouteRouteWithChildren;
   "/$username/$slug": typeof UsernameSlugRoute;
   "/api/health": typeof ApiHealthRoute;
+  "/auth/login": typeof AuthLoginRoute;
   "/printer/$resumeId": typeof PrinterResumeIdRoute;
   "/_home/": typeof HomeIndexRoute;
+  "/auth/": typeof AuthIndexRoute;
   "/dashboard/": typeof DashboardIndexRoute;
   "/api/auth/$": typeof ApiAuthSplatRoute;
   "/api/openapi/$": typeof ApiOpenapiSplatRoute;
@@ -167,7 +185,9 @@ export interface FileRouteTypes {
     | "/builder/$resumeId"
     | "/$username/$slug"
     | "/api/health"
+    | "/auth/login"
     | "/printer/$resumeId"
+    | "/auth/"
     | "/dashboard/"
     | "/api/auth/$"
     | "/api/openapi/$"
@@ -181,8 +201,10 @@ export interface FileRouteTypes {
     | "/schema.json"
     | "/$username/$slug"
     | "/api/health"
+    | "/auth/login"
     | "/printer/$resumeId"
     | "/"
+    | "/auth"
     | "/dashboard"
     | "/api/auth/$"
     | "/api/openapi/$"
@@ -199,8 +221,10 @@ export interface FileRouteTypes {
     | "/builder/$resumeId"
     | "/$username/$slug"
     | "/api/health"
+    | "/auth/login"
     | "/printer/$resumeId"
     | "/_home/"
+    | "/auth/"
     | "/dashboard/"
     | "/api/auth/$"
     | "/api/openapi/$"
@@ -218,7 +242,9 @@ export interface RootRouteChildren {
   BuilderResumeIdRouteRoute: typeof BuilderResumeIdRouteRouteWithChildren;
   UsernameSlugRoute: typeof UsernameSlugRoute;
   ApiHealthRoute: typeof ApiHealthRoute;
+  AuthLoginRoute: typeof AuthLoginRoute;
   PrinterResumeIdRoute: typeof PrinterResumeIdRoute;
+  AuthIndexRoute: typeof AuthIndexRoute;
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute;
   ApiOpenapiSplatRoute: typeof ApiOpenapiSplatRoute;
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute;
@@ -255,6 +281,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof DashboardIndexRouteImport;
       parentRoute: typeof DashboardRouteRoute;
     };
+    "/auth/": {
+      id: "/auth/";
+      path: "/auth";
+      fullPath: "/auth/";
+      preLoaderRoute: typeof AuthIndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     "/_home/": {
       id: "/_home/";
       path: "/";
@@ -267,6 +300,13 @@ declare module "@tanstack/react-router" {
       path: "/printer/$resumeId";
       fullPath: "/printer/$resumeId";
       preLoaderRoute: typeof PrinterResumeIdRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/auth/login": {
+      id: "/auth/login";
+      path: "/auth/login";
+      fullPath: "/auth/login";
+      preLoaderRoute: typeof AuthLoginRouteImport;
       parentRoute: typeof rootRouteImport;
     };
     "/api/health": {
@@ -388,7 +428,9 @@ const rootRouteChildren: RootRouteChildren = {
   BuilderResumeIdRouteRoute: BuilderResumeIdRouteRouteWithChildren,
   UsernameSlugRoute: UsernameSlugRoute,
   ApiHealthRoute: ApiHealthRoute,
+  AuthLoginRoute: AuthLoginRoute,
   PrinterResumeIdRoute: PrinterResumeIdRoute,
+  AuthIndexRoute: AuthIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiOpenapiSplatRoute: ApiOpenapiSplatRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,
